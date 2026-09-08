@@ -8,6 +8,9 @@ title: 具身智能知识花园 (Quartz 预览)
 
 ## 📄 论文精读
 
+- [[paper_2511.00091/PLD_论文解读|Self-Improving Vision-Language-Action Models with Data Generation via Residual RL (PLD)]]
+  - **标签**：#具身智能 #VLA #强化学习 #残差控制 #自改进飞轮 #论文解读
+  - **亮点**：首创 Probe, Learn, Distill (PLD) 三阶段自改进范式，通过轻量残差专家与主动探测生成部署对齐纠错轨迹，LIBERO 达到 99.2% 饱和成功率，实现 1 小时真实 GPU 拔插装配无人工干预。
 - [[paper_2507.12440/EgoVLA_论文解读|EgoVLA: Learning Vision-Language-Action Models from Egocentric Human Videos]]
   - **标签**：#具身智能 #VLA #论文解读 #人形机器人 #灵巧操作
   - **亮点**：利用 80 亿人类日常视频，构建基于 MANO 动作先验的双臂灵巧操作大模型。
