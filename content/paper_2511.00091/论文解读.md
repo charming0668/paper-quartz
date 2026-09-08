@@ -55,23 +55,18 @@
 
 ```mermaid
 graph TD
-    subgraph 传统遥操作SFT瓶颈
-        A1[人工专家遥操作] --> B1[成本极高/数据极难扩展]
-        B1 --> C1[遥操作数据与真实部署分布偏离]
-        C1 --> D1[遇轻微扰动即进入未见状态崩溃]
-    end
+    A[传统遥操作 SFT 路径] --> B[高昂人工示教成本与数据扩展瓶颈]
+    B --> C[遥操作轨迹严重偏离真实部署分布]
+    C --> D[遇扰动即陷入未见状态导致控制崩溃]
 
-    subgraph 直接端到端VLA强化学习瓶颈
-        A2[全量/LoRA微调VLA大模型] --> B2[单步前向反向显存巨大 >62GB]
-        B2 --> C2[稀疏奖励下多任务探索极易发散]
-        C2 --> D2[高频控制交互耗时过长不可承受]
-    end
+    E[直接端到端 VLA-RL 路径] --> F[多模态大模型单步反向显存巨大]
+    F --> G[高频连续控制与稀疏奖励下极易发散]
+    G --> H[多任务异构场景难以稳定扩展]
 
-    subgraph PLD解耦自改进飞轮 (本文方案)
-        A3[冻结VLA作为基础先验] --> B3[轻量残差头快速探索收敛]
-        B3 --> C3[主动探测生成分布对齐+恢复轨迹]
-        C3 --> D3[蒸馏微调通用VLA闭环自我迭代]
-    end
+    I[PLD 解耦自改进闭环] --> J[冻结基准大模型提供语义与动作先验]
+    J --> K[轻量残差专家仅在探索瓶颈期高效介入]
+    K --> L[主动探测生成兼顾部署对齐与自救恢复的混合数据]
+    L --> M[离线统一蒸馏微调实现模型自我进化]
 ```
 
 ### 1. 人工遥操作示教的局限性 (Teleoperation Bottleneck)
@@ -127,16 +122,16 @@ $$a_t = D_\phi\big(h_\theta(o_t, g)\big)$$
 sequenceDiagram
     autonumber
     participant Env as 机械臂环境
-    participant Base as 冻结的基准 VLA (π_b)
-    participant Res as 轻量残差专家 (π_δ)
-    participant Buf as 对称经验缓冲池 (Offline + Online)
+    participant Base as 冻结基准VLA策略
+    participant Res as 轻量残差动作专家
+    participant Buf as 对称经验回放池
     
-    Env->>Base: 状态观测 s_t, 指令 g
-    Base->>Res: 生成基础动作 a_b
-    Res->>Res: 输出高斯校正 a_δ 并限制范围 [-ξ, ξ]
-    Res->>Env: 执行合成动作 ā = a_b + a_δ
-    Env->>Buf: 存入转移经验 (s, ā, r, s')
-    Buf->>Res: 对等采样训练 Critic Q 与 Actor π_δ
+    Env->>Base: 状态观测与任务目标指令
+    Base->>Res: 生成基准前向动作 a_b
+    Res->>Res: 预测高斯残差 a_delta 并截断探索幅度
+    Res->>Env: 执行合成动作 a_b + a_delta
+    Env->>Buf: 存入环境状态转移经验
+    Buf->>Res: 1比1对等采样训练 Critic 与 Actor
 ```
 
 ---
