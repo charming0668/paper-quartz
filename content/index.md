@@ -8,6 +8,9 @@ title: 具身智能知识花园 (Quartz 预览)
 
 ## 📄 论文精读
 
+- [[paper_2511.17502/RynnVLA-002_论文解读|RynnVLA-002: A Unified Vision-Language-Action and World Model]]
+  - **标签**：#具身智能 #VLA #世界模型 #动作世界模型 #论文解读 #机械臂操作
+  - **亮点**：阿里达摩院首创动作世界模型 (Action World Model) 统一架构，攻克自回归动作误差级联难题；无预训练下 LIBERO 达到 97.4% SOTA，真机 LeRobot SO100 抗干扰成功率超传统基线 30%。
 - [[paper_2608.26067/StreamPI_论文解读|StreamPI: Streaming Multimodal Temporal Modeling for Vision-Language-Action Models]]
   - **标签**：#具身智能 #VLA #时序建模 #流式推理 #机器人操作 #论文解读
   - **亮点**：首创指令锚定式时序建模与原子时序单元，零额外参数全面激活 VLA 时序与空间几何感知；结合随机间隔训练与增量 KV Cache，真机 80% 破解三仙归洞猜球与动态抓取，LIBERO 达 98.3% 刷新纪录。
