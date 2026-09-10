@@ -8,6 +8,9 @@ title: 具身智能知识花园 (Quartz 预览)
 
 ## 📄 论文精读
 
+- [[paper_2602.16710/EgoScale_论文解读|EgoScale: Scaling Dexterous Manipulation with Diverse Egocentric Human Data]]
+  - **标签**：#具身智能 #VLA #灵巧操作 #人类视频学习 #缩放定律 #跨构型迁移 #论文解读
+  - **亮点**：英伟达与伯克利团队推进 20,854 小时第一人称视频预训练，首次确立灵巧操作对数线性 Scaling Law ($R^2=0.9983$)；提出“规模预训练+轻量中训”两阶段解耦范式，真机成功率飙升 54%，仅凭 1 次示范实现折叠衣物等单样本涌现泛化，并成功跨构型赋能 G1 人形机器人三指手。
 - [[paper_2511.17502/RynnVLA-002_论文解读|RynnVLA-002: A Unified Vision-Language-Action and World Model]]
   - **标签**：#具身智能 #VLA #世界模型 #动作世界模型 #论文解读 #机械臂操作
   - **亮点**：阿里达摩院首创动作世界模型 (Action World Model) 统一架构，攻克自回归动作误差级联难题；无预训练下 LIBERO 达到 97.4% SOTA，真机 LeRobot SO100 抗干扰成功率超传统基线 30%。
