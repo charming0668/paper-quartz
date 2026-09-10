@@ -8,6 +8,9 @@ title: 具身智能知识花园 (Quartz 预览)
 
 ## 📄 论文精读
 
+- [[paper_2608.26067/StreamPI_论文解读|StreamPI: Streaming Multimodal Temporal Modeling for Vision-Language-Action Models]]
+  - **标签**：#具身智能 #VLA #时序建模 #流式推理 #机器人操作 #论文解读
+  - **亮点**：首创指令锚定式时序建模与原子时序单元，零额外参数全面激活 VLA 时序与空间几何感知；结合随机间隔训练与增量 KV Cache，真机 80% 破解三仙归洞猜球与动态抓取，LIBERO 达 98.3% 刷新纪录。
 - [[paper_2511.00091/PLD_论文解读|Self-Improving Vision-Language-Action Models with Data Generation via Residual RL (PLD)]]
   - **标签**：#具身智能 #VLA #强化学习 #残差控制 #自改进飞轮 #论文解读
   - **亮点**：首创 Probe, Learn, Distill (PLD) 三阶段自改进范式，通过轻量残差专家与主动探测生成部署对齐纠错轨迹，LIBERO 达到 99.2% 饱和成功率，实现 1 小时真实 GPU 拔插装配无人工干预。
