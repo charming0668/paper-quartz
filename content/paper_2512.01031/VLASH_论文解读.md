@@ -142,7 +142,7 @@ $$
 为了激活 VLA 对本体状态输入的敏感度与因果利用能力，VLASH 提出了**时序偏移数据增强 (Temporal Offset Augmentation)**：
 在下游任务微调过程中，保持视觉输入 $o_t$ 固定，随机采样时序偏移量 $\delta \in \{0, 1, \dots, \Delta_{\max}\}$，提取轨迹中对应的未来状态 $s_{t+\delta}$ 与未来动作分块 $A_{t+\delta}$，构造三元组训练样本：
 $$
-\left( o_t, \; s_{t+\delta}, \; a_{(t+\delta):(t+\delta+H-1)} ight)
+\left( o_t, \; s_{t+\delta}, \; a_{(t+\delta):(t+\delta+H-1)} \right)
 $$
 这一设计极富洞察力：**在完全相同的视觉输入 $o_t$ 之下，由于机器人被注入了不同的未来本体状态 $s_{t+\delta}$，其对应的真实标注动作发生了显著偏转**。网络为了在优化目标中降维收敛，被迫将注意力从纯图像中抽离，强制深度理解并对齐状态输入 $s_{t+\delta}$ 的空间几何物理意义！
 
@@ -155,7 +155,7 @@ $$
 VLASH 提出了一种优雅的底层架构优化——**共享观测注意力打包 (Packed Sequence with Shared Observation)**：
 将单条微调样本打包为：
 $$
-\left[ o_t, \; (s_t, A_t), \; (s_{t+1}, A_{t+1}), \; \dots, \; (s_{t+\Delta_{\max}}, A_{t+\Delta_{\max}}) ight]
+\left[ o_t, \; (s_t, A_t), \; (s_{t+1}, A_{t+1}), \; \dots, \; (s_{t+\Delta_{\max}}, A_{t+\Delta_{\max}}) \right]
 $$
 并通过自定义 2D 注意力掩码施加严格因果隔离约束：
 1. **视觉共享**：所有偏移分支均被允许跨注意力关注到唯一的视觉观测 Token $o_t$；
