@@ -8,6 +8,9 @@ title: 具身智能知识花园 (Quartz 预览)
 
 ## 📄 论文精读
 
+- [[paper_2512.01031/VLASH_论文解读|VLASH: Real-Time VLAs via Future-State-Aware Asynchronous Inference]]
+  - **标签**：#具身智能 #VLA #实时控制 #异步推理 #未来状态感知 #动作分块 #论文解读
+  - **亮点**：MIT 韩松团队首创未来状态感知 (Future-State-Aware) 异步推理范式，通过已知动作前滚状态彻底消除预测-执行时序错位；配合共享观测微调提速 3.26 倍，将真机反应延迟骤降最高 17.4 倍，首破 VLA 连续打乒乓球与打地鼠等极限动态交互。
 - [[paper_2603.19199/FASTER_论文解读|FASTER: Rethinking Real-Time Flow VLAs]]
   - **标签**：#具身智能 #VLA #实时控制 #流匹配 #动作分块 #论文解读
   - **亮点**：港大赵恒爽团队颠覆流匹配 VLA 恒定时间步采样范式，提出视界感知调度 (HAS) 与流式即解即发架构；首动作时间 (TTFA) 提速超 3 倍，消费级显卡 (RTX 4060) 亦可赋能 30Hz 高动态乒乓球接球反击与日常灵巧操作，刷新动态基准 SOTA。
