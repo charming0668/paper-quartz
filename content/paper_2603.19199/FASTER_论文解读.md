@@ -183,7 +183,7 @@ FASTER 彻底打破了传统“一次性下发整个 chunk 巨型数据包”的
 论文在仿真基准与真实世界物理机器人平台上对 FASTER 进行了极其严谨、详尽的多维度实验评测。
 
 ### 4.1 硬件延迟与反应时间理论/实测基准 (RTX 4090 vs RTX 4060)
-实验选用了两款最具代表性的流匹配 VLA 骨干模型：**$\pi_{0.5}$** (基于 Open-VLA/Prismatic 架构 + Flow Matching Action Head) 与 **X-VLA**。控制频率设定为实体机器人常用的 $f=30\text{ Hz}$（$\Delta t_{\text{ctrl}} = 33.3\text{ ms}$）。
+实验选用了两款最具代表性的流匹配 VLA 骨干模型：Physical Intelligence 团队的 **$\pi_{0.5}$** 与 **X-VLA**。控制频率设定为实体机器人常用的 $f=30\text{ Hz}$（$\Delta t_{\text{ctrl}} = 33.3\text{ ms}$）。
 
 | 模型体系 | 推理范式 | RTX 4090 TTFA (ms) $\downarrow$ | RTX 4090 $s_{\min}$ $\downarrow$ | RTX 4090 $\mathbb{E}[\Delta t_{\text{react}}]$ (ms) $\downarrow$ | RTX 4060 TTFA (ms) $\downarrow$ | RTX 4060 $s_{\min}$ $\downarrow$ | RTX 4060 $\mathbb{E}[\Delta t_{\text{react}}]$ (ms) $\downarrow$ |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
