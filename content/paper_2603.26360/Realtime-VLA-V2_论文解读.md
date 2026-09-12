@@ -154,20 +154,19 @@ VLA 生成的原始路径在几何空间上通常保持了高度合理的任务�
 为了在**绝对保持空间几何路径不变**的前提下最大化动作平滑度，云端采用二次规划 (Quadratic Programming, QP) 针对每个动作步长的倒数 $\Delta t_i^{-1}$ 进行平滑分配：
 
 $$
-min_{Delta t_{1:H}} quad lambda_{0}sum_{i=1}^{H}left(\frac{1}{Delta t_{i}} - \frac{1}{Delta t_{i}^{	ext{ref}}}
-\right)^{2} + lambda_{1}|a_{i}|^{2}
+\min_{\Delta t_{1:H}} \quad \lambda_{0}\sum_{i=1}^{H}\left(\frac{1}{\Delta t_{i}} - \frac{1}{\Delta t_{i}^{\text{ref}}}\right)^{2} + \lambda_{1}\|a_{i}\|^{2}
 $$
 
 约束条件严格遵循物理运动学极限：
 
 $$
-	ext{s.t.} quad Delta t_{min} le Delta t_{i} le Delta t_{max}, quad v_{i} le v_{max}
+\text{s.t.} \quad \Delta t_{\min} \le \Delta t_{i} \le \Delta t_{\max}, \quad v_{i} \le v_{\max}
 $$
 
 其中，局部速度 $v_i$ 与加速度 $a_i$ 定义为离散差分格式：
 
 $$
-v_{i} = \frac{s_{i+1} - s_{i}}{Delta t_{i}}, quad a_{i} = \frac{s_{i+1} + s_{i-1} - 2 s_{i}}{Delta t_{i}^{2}}
+v_{i} = \frac{s_{i+1} - s_{i}}{\Delta t_{i}}, \quad a_{i} = \frac{s_{i+1} + s_{i-1} - 2 s_{i}}{\Delta t_{i}^{2}}
 $$
 
 - $s_i$ 为 VLA 模型输出的空间路径点；
@@ -181,8 +180,7 @@ $$
 在客户端，团队将机械臂底层的响应特性精确建模为一个**一阶线性循环滞后动力学方程**：
 
 $$
-mathbf{q}_{k+1} = amathbf{q}_{k} + (1-a)mathbf{y}_{k}, quad a = expleft(-\frac{h}{	au}
-\right)
+\mathbf{q}_{k+1} = a\mathbf{q}_{k} + (1-a)\mathbf{y}_{k}, \quad a = \exp\left(-\frac{h}{\tau}\right)
 $$
 
 其中 $h$ 为底层伺服控制周期（例如 $2\text{ ms}$ 对应 $500\text{ Hz}$），$\tau$ 为系统辨识出的硬件响应时间常数。这一动力学模型精准刻画了下发指令 $\mathbf{y}_k$ 与实际位置 $\mathbf{q}_k$ 之间的幅值衰减与相位滞后。
@@ -190,22 +188,22 @@ $$
 在每个控制周期，客户端以当前状态 $\mathbf{q}_0$ 与历史指令 $\mathbf{y}_{-1}, \mathbf{y}_{-2}$ 为初始条件，针对未来 $N$ 步预测视界求解如下模型预测控制 (MPC) 优化问题：
 
 $$
-egin{aligned}
-min_{{mathbf{y}_{k}}_{k=0}^{N-1}} & sum_{k=0}^{N-1}Big[|mathbf{q}_{k}-mathbf{r}_{k}|_{2}^{2} + lambda_{mathrm{cmd}}|mathbf{y}_{k}-mathbf{r}_{k}|_{2}^{2} + lambda_{mathrm{lag}}|mathbf{y}_{k}-mathbf{q}_{k}|_{2}^{2} \
-& quad + lambda_{Delta}|mathbf{y}_{k}-mathbf{y}_{k-1}|_{2}^{2} + lambda_{Delta^{2}}|mathbf{y}_{k}-2mathbf{y}_{k-1}+mathbf{y}_{k-2}|_{2}^{2}Big] + lambda_{f}|mathbf{q}_{N}-mathbf{r}_{N}|_{2}^{2}
-end{aligned}
+\begin{aligned}
+\min_{\{\mathbf{y}_{k}\}_{k=0}^{N-1}} & \sum_{k=0}^{N-1}\Big[\|\mathbf{q}_{k}-\mathbf{r}_{k}\|_{2}^{2} + \lambda_{mathrm{cmd}}\|\mathbf{y}_{k}-\mathbf{r}_{k}\|_{2}^{2} + \lambda_{mathrm{lag}}\|\mathbf{y}_{k}-\mathbf{q}_{k}\|_{2}^{2} \\
+& \quad + \lambda_{\Delta}\|\mathbf{y}_{k}-\mathbf{y}_{k-1}\|_{2}^{2} + \lambda_{\Delta^{2}}\|\mathbf{y}_{k}-2\mathbf{y}_{k-1}+\mathbf{y}_{k-2}\|_{2}^{2}\Big] + \lambda_{f}\|\mathbf{q}_{N}-\mathbf{r}_{N}\|_{2}^{2}
+\end{aligned}
 $$
 
 受到以下多重物理与安全边界约束：
 
 $$
-egin{aligned}
-	ext{s.t.} quad & mathbf{q}_{k+1} = amathbf{q}_{k} + (1-a)mathbf{y}_{k}, \
-& mathbf{q}_{min} le mathbf{y}_{k} le mathbf{q}_{max}, \
-& -mathbf{d}_{max} le mathbf{y}_{k} - mathbf{q}_{k} le mathbf{d}_{max}, \
-& -hmathbf{v}_{max} le mathbf{y}_{k} - mathbf{y}_{k-1} le hmathbf{v}_{max}, \
-& -h^{2}mathbf{a}_{max} le mathbf{y}_{k} - 2mathbf{y}_{k-1} + mathbf{y}_{k-2} le h^{2}mathbf{a}_{max}, quad k = 0, dots, N-1.
-end{aligned}
+\begin{aligned}
+\text{s.t.} \quad & \mathbf{q}_{k+1} = a\mathbf{q}_{k} + (1-a)\mathbf{y}_{k}, \\
+& \mathbf{q}_{\min} \le \mathbf{y}_{k} \le \mathbf{q}_{\max}, \\
+& -\mathbf{d}_{\max} \le \mathbf{y}_{k} - \mathbf{q}_{k} \le \mathbf{d}_{\max}, \\
+& -h\mathbf{v}_{\max} \le \mathbf{y}_{k} - \mathbf{y}_{k-1} \le h\mathbf{v}_{\max}, \\
+& -h^{2}\mathbf{a}_{\max} \le \mathbf{y}_{k} - 2\mathbf{y}_{k-1} + \mathbf{y}_{k-2} \le h^{2}\mathbf{a}_{\max}, \quad k = 0, \dots, N-1.
+\end{aligned}
 $$
 
 各项损失函数具备极其明确的物理内涵：
@@ -329,18 +327,18 @@ $$
 
 ### 6.2 异步控制预测有效段收缩与时延边界数学分析
 
-设动作分块总长度为 $T_{\text{chunk}}$，整体速度加速因子为 $\alpha$（实际执行时长缩减为 $T_{\text{chunk}} / \alpha$）。
-系统端到端总延迟为 $t_{\text{delay}}$，动作分块末端由于自回归或扩散多步漂移而不可用的劣质尾段时间为 $t_{\text{bad}}$。
+设动作分块总长度为 $T_{\text{chunk}}$, 整体速度加速因子为 $\alpha$（实际执行时长缩减为 $T_{\text{chunk}} / \alpha$）。
+系统端到端总延迟为 $t_{\text{delay}}$, 动作分块末端由于自回归或扩散多步漂移而不可用的劣质尾段时间为 $t_{\text{bad}}$。
 则机械臂实际可用于稳定闭环控制的**有效动作窗口 $\Delta T_{\text{usable}}$** 严格满足：
 
 $$
-Delta T_{	ext{usable}} = \frac{T_{	ext{chunk}}}{alpha} - t_{	ext{delay}} - t_{	ext{bad}}
+\Delta T_{\text{usable}} = \frac{T_{\text{chunk}}}{\alpha} - t_{\text{delay}} - t_{\text{bad}}
 $$
 
 系统的基本稳定性充要条件是有效窗口必须严格大于零：
 
 $$
-Delta T_{	ext{usable}} > 0 implies alpha < \frac{T_{	ext{chunk}}}{t_{	ext{delay}} + t_{	ext{bad}}}
+\Delta T_{\text{usable}} > 0 \implies \alpha < \frac{T_{\text{chunk}}}{t_{\text{delay}} + t_{\text{bad}}}
 $$
 
 这一简洁而深刻的不等式直击具身加速的核心：
