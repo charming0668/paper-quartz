@@ -189,7 +189,7 @@ $$
 
 $$
 \begin{aligned}
-\min_{\{\mathbf{y}_{k}\}_{k=0}^{N-1}} & \sum_{k=0}^{N-1}\Big[\|\mathbf{q}_{k}-\mathbf{r}_{k}\|_{2}^{2} + \lambda_{mathrm{cmd}}\|\mathbf{y}_{k}-\mathbf{r}_{k}\|_{2}^{2} + \lambda_{mathrm{lag}}\|\mathbf{y}_{k}-\mathbf{q}_{k}\|_{2}^{2} \\
+\min_{\{\mathbf{y}_{k}\}_{k=0}^{N-1}} & \sum_{k=0}^{N-1}\Big[\|\mathbf{q}_{k}-\mathbf{r}_{k}\|_{2}^{2} + \lambda_{\mathrm{cmd}}\|\mathbf{y}_{k}-\mathbf{r}_{k}\|_{2}^{2} + \lambda_{\mathrm{lag}}\|\mathbf{y}_{k}-\mathbf{q}_{k}\|_{2}^{2} \\
 & \quad + \lambda_{\Delta}\|\mathbf{y}_{k}-\mathbf{y}_{k-1}\|_{2}^{2} + \lambda_{\Delta^{2}}\|\mathbf{y}_{k}-2\mathbf{y}_{k-1}+\mathbf{y}_{k-2}\|_{2}^{2}\Big] + \lambda_{f}\|\mathbf{q}_{N}-\mathbf{r}_{N}\|_{2}^{2}
 \end{aligned}
 $$
