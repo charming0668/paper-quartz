@@ -1,3 +1,121 @@
 @use "./variables.scss" as *;
 
-// put your custom CSS here!
+// ==========================================================================
+// 学术论文规范三线表 (Booktabs / Three-Line Table)
+// ==========================================================================
+
+.table-container {
+  overflow-x: auto;
+  margin: 1.8rem auto;
+  display: flex;
+  justify-content: center;
+
+  & > table {
+    margin: 0 auto;
+    border-collapse: collapse;
+    border-spacing: 0;
+    /* 顶线 \toprule: 2.2px 粗实线 */
+    border-top: 2.2px solid var(--dark);
+    /* 底线 \bottomrule: 2.2px 粗实线 */
+    border-bottom: 2.2px solid var(--dark);
+    /* 彻底去除所有外边框竖线与内竖线 */
+    border-left: none !important;
+    border-right: none !important;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    letter-spacing: 0.01em;
+
+    /* 表头 th */
+    thead th,
+    th {
+      font-weight: 600;
+      color: var(--dark);
+      /* 表头底线 \midrule: 1.2px 中细实线 */
+      border-bottom: 1.2px solid var(--dark) !important;
+      border-top: none !important;
+      border-left: none !important;
+      border-right: none !important;
+      padding: 0.65rem 1.2rem;
+      background-color: transparent;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    /* 表身 td */
+    tbody td,
+    td {
+      padding: 0.55rem 1.2rem;
+      border: none !important;
+      text-align: center;
+      color: var(--darkgray);
+      vertical-align: middle;
+    }
+
+    /* 表身 tr 行间微调：三线表原则上无横线，悬浮高亮 */
+    tbody tr,
+    tr {
+      border: none !important;
+      transition: background-color 0.15s ease;
+
+      &:hover {
+        background-color: var(--highlight);
+      }
+    }
+
+    /* 首列若是项目/指标名称，保持靠左对齐 */
+    th:first-child,
+    td:first-child {
+      text-align: left;
+      padding-left: 0.8rem;
+    }
+
+    /* 尾列调整右边距 */
+    th:last-child,
+    td:last-child {
+      padding-right: 0.8rem;
+    }
+  }
+}
+
+// ==========================================================================
+// 正文插图智能尺寸约束 (防止大图撑满整屏，居中并带精美微阴影)
+// ==========================================================================
+
+article {
+  /* 正文插图核心约束 */
+  img {
+    max-height: 420px;       /* 限制最大单图垂直高度，杜绝占满整屏 */
+    max-width: 86%;          /* 控制宽度，两侧自然留白 */
+    width: auto;             /* 保证宽高比不失真 */
+    height: auto;
+    display: block;
+    margin: 1.6rem auto 0.6rem auto; /* 水平居中 */
+    border-radius: 8px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+    }
+  }
+
+  /* 图片后的引用说明块居中紧凑 */
+  blockquote:has(> p > strong:first-child) {
+    max-width: 88%;
+    margin: 0.5rem auto 1.5rem auto;
+    font-size: 0.9rem;
+    padding: 0.6rem 1rem;
+    border-left: 3px solid var(--secondary);
+    background-color: var(--highlight);
+    border-radius: 0 6px 6px 0;
+  }
+
+  /* 移动端智能自适应 */
+  @media all and (max-width: 800px) {
+    img {
+      max-height: 320px;
+      max-width: 98%;
+    }
+  }
+}
