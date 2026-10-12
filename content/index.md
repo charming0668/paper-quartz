@@ -8,6 +8,9 @@ title: 具身智能知识花园 (Quartz 预览)
 
 ## 📄 论文精读
 
+- [[paper_2602.14979/RynnBrain_论文解读|RynnBrain: Open Embodied Foundation Models]]
+  - **标签**：#具身智能 #空间智能 #VLA #具身基础模型 #时空定位 #物理推理 #强化学习 #论文解读
+  - **亮点**：阿里达摩院推出开源时空具身基础模型家族 (2B / 8B / 30B-A3B MoE)，统一自回归多模态空间图元输出；首创物理接地思维链 (CoP) 与空间规则强化学习奖励，8B 空间推理力压 GPT-5.2 与 Gemini 3 Pro；全栈开源 RynnBrain-Nav (单目连续导航 58.6% SOTA)、RynnBrain-Plan (多轮长程规划) 与 RynnBrain-VLA (端到端机械臂 77% 高精度抓取)。
 - [[paper_2603.26360/Realtime-VLA-V2_论文解读|Realtime-VLA V2: Learning to Run VLAs Fast, Smooth, and Accurate]]
   - **标签**：#具身智能 #VLA #实时控制 #机械臂操作 #轨迹优化 #速度自适应 #时延校准 #论文解读
   - **亮点**：Dexmal 团队攻克 VLA 真实机械臂落地速度瓶颈，首创端云解耦后处理（OSQP 时间优化 + acados 空间 MPC）与亚毫秒级时延前置放大校准；结合人类在环“动态油门”数据飞轮，在 0.2mm 治具精密装配与折叠衣物中提速超 3 倍逼近人类极限，并提出机器人执行 Roofline 速度上限理论。
