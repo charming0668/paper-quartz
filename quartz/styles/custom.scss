@@ -1,41 +1,67 @@
 @use "./variables.scss" as *;
 
 // ==========================================================================
-// 学术论文规范三线表 (Booktabs / Three-Line Table)
+// 1. 学术论文规范三线表 (Booktabs / Three-Line Table) - 紧凑精炼与响应式
 // ==========================================================================
 
 .table-container {
+  width: 100%;
+  max-width: 100%;
   overflow-x: auto;
-  margin: 1.8rem auto;
-  display: flex;
-  justify-content: center;
+  -webkit-overflow-scrolling: touch;
+  margin: 1.5rem auto 2rem auto;
+  display: block;
+  box-sizing: border-box;
+
+  /* 学术级极简纤细滚动条 */
+  &::-webkit-scrollbar {
+    height: 5px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: var(--lightgray);
+    border-radius: 3px;
+    transition: background 0.2s ease;
+
+    &:hover {
+      background: var(--gray);
+    }
+  }
 
   & > table {
+    width: max-content;
+    min-width: 100%;
     margin: 0 auto;
     border-collapse: collapse;
     border-spacing: 0;
-    /* 顶线 \toprule: 2.2px 粗实线 */
-    border-top: 2.2px solid var(--dark);
-    /* 底线 \bottomrule: 2.2px 粗实线 */
-    border-bottom: 2.2px solid var(--dark);
-    /* 彻底去除所有外边框竖线与内竖线 */
+
+    /* 顶线 \toprule: 2px 粗实线 */
+    border-top: 2px solid var(--dark);
+    /* 底线 \bottomrule: 2px 粗实线 */
+    border-bottom: 2px solid var(--dark);
+    /* 彻底杜绝学术论文三线表中的竖线 */
     border-left: none !important;
     border-right: none !important;
-    font-size: 0.95rem;
-    line-height: 1.6;
-    letter-spacing: 0.01em;
+
+    /* 紧凑学术排版：从原本臃肿的 0.95rem 优化为 0.82rem，显著减小表格视觉体量 */
+    font-size: 0.82rem;
+    line-height: 1.42;
+    letter-spacing: 0.005em;
+    font-variant-numeric: tabular-nums; /* 等宽数字纵向精确对齐 */
 
     /* 表头 th */
     thead th,
     th {
       font-weight: 600;
       color: var(--dark);
-      /* 表头底线 \midrule: 1.2px 中细实线 */
-      border-bottom: 1.2px solid var(--dark) !important;
+      /* 表头底线 \midrule: 1.1px 实线 */
+      border-bottom: 1.1px solid var(--dark) !important;
       border-top: none !important;
       border-left: none !important;
       border-right: none !important;
-      padding: 0.65rem 1.2rem;
+      padding: 0.45rem 0.65rem; /* 大幅精简内边距，克制紧凑 */
       background-color: transparent;
       text-align: center;
       white-space: nowrap;
@@ -44,14 +70,15 @@
     /* 表身 td */
     tbody td,
     td {
-      padding: 0.55rem 1.2rem;
+      padding: 0.38rem 0.65rem; /* 紧凑舒适，横向多列不撑爆屏幕 */
       border: none !important;
       text-align: center;
       color: var(--darkgray);
       vertical-align: middle;
+      white-space: nowrap;
     }
 
-    /* 表身 tr 行间微调：三线表原则上无横线，悬浮高亮 */
+    /* 表身 tr 行间微调：无横线，悬浮微高亮方便扫读 */
     tbody tr,
     tr {
       border: none !important;
@@ -62,60 +89,222 @@
       }
     }
 
-    /* 首列若是项目/指标名称，保持靠左对齐 */
+    /* 第一列（通常为指标名称/对比项目）：靠左对齐，适度留白 */
     th:first-child,
     td:first-child {
       text-align: left;
-      padding-left: 0.8rem;
+      padding-left: 0.5rem;
+      white-space: normal; /* 允许名称适当折行，防止撑死列宽 */
+      max-width: 220px;
     }
 
-    /* 尾列调整右边距 */
+    /* 最后一列调整右边距 */
     th:last-child,
     td:last-child {
-      padding-right: 0.8rem;
+      padding-right: 0.5rem;
     }
   }
 }
 
 // ==========================================================================
-// 正文插图智能尺寸约束 (防止大图撑满整屏，居中并带精美微阴影)
+// 2. 正文插图智能自适应呈现 (Responsive Figure & Academic Display)
 // ==========================================================================
 
 article {
-  /* 正文插图核心约束 */
+  /* 正文插图核心约束与自适应显示 */
   img {
-    max-height: 420px;       /* 限制最大单图垂直高度，杜绝占满整屏 */
-    max-width: 86%;          /* 控制宽度，两侧自然留白 */
-    width: auto;             /* 保证宽高比不失真 */
+    max-width: 100%;
+    max-height: min(520px, 75vh); /* 动态自适应视口高度，既不撑满整屏又保证大图清晰 */
+    width: auto;
     height: auto;
+    object-fit: contain;
     display: block;
-    margin: 1.6rem auto 0.6rem auto; /* 水平居中 */
-    border-radius: 8px;
-    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    margin: 1.8rem auto 0.6rem auto; /* 水平居中 */
+    border-radius: 6px;
+    border: 1px solid var(--lightgray); /* 纸质论文轻微边线 */
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05); /* 柔和漫反射微阴影 */
+    transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+    cursor: zoom-in; /* 明确交互线索：点击可放大 */
 
     &:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      border-color: var(--secondary);
     }
   }
 
-  /* 图片后的引用说明块居中紧凑 */
+  /* 插图下方图注 (Caption) 学术美化与紧凑布局 */
+  p:has(> img) + p > em,
+  p > img + em,
+  p > em:first-child {
+    display: block;
+    text-align: center;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: var(--gray);
+    margin: 0.4rem auto 1.6rem auto;
+    max-width: 90%;
+    font-style: normal;
+
+    /* 图注标号突出显示 */
+    strong, b {
+      color: var(--dark);
+      font-weight: 600;
+    }
+  }
+
+  /* 引用说明块 */
   blockquote:has(> p > strong:first-child) {
-    max-width: 88%;
-    margin: 0.5rem auto 1.5rem auto;
-    font-size: 0.9rem;
-    padding: 0.6rem 1rem;
+    max-width: 92%;
+    margin: 0.8rem auto 1.6rem auto;
+    font-size: 0.88rem;
+    padding: 0.6rem 1.1rem;
     border-left: 3px solid var(--secondary);
     background-color: var(--highlight);
     border-radius: 0 6px 6px 0;
   }
 
   /* 移动端智能自适应 */
-  @media all and (max-width: 800px) {
+  @media all and ($mobile) {
     img {
-      max-height: 320px;
-      max-width: 98%;
+      max-height: 360px;
+    }
+    .table-container > table {
+      font-size: 0.78rem;
     }
   }
 }
+
+// ==========================================================================
+// 3. 沉浸式图片放大灯箱 (Academic Lightbox Overlay)
+// ==========================================================================
+
+.quartz-lightbox-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 999999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+
+  &.active {
+    opacity: 1;
+  }
+}
+
+/* 深色毛玻璃背景遮罩 */
+.quartz-lightbox-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(15, 17, 23, 0.88);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  cursor: zoom-out;
+}
+
+/* 灯箱核心容器 */
+.quartz-lightbox-container {
+  position: relative;
+  z-index: 10;
+  max-width: 94vw;
+  max-height: 94vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+/* 右上角关闭按钮 */
+.quartz-lightbox-close {
+  position: absolute;
+  top: -2.8rem;
+  right: 0;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.28);
+    transform: scale(1.1);
+  }
+
+  svg {
+    stroke: #ffffff;
+  }
+}
+
+/* 图片包围体 */
+.quartz-lightbox-figure {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 94vw;
+  max-height: 84vh;
+}
+
+/* 放大显示的高清大图 */
+.quartz-lightbox-img {
+  max-width: 92vw;
+  max-height: 78vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+  background: #ffffff; /* 确保包含透明通道的图或在黑夜模式下有纯净高对比衬底 */
+  transform: scale(0.95);
+  transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+  cursor: default;
+}
+
+.quartz-lightbox-overlay.active .quartz-lightbox-img {
+  transform: scale(1);
+}
+
+/* 灯箱内的图注文本 */
+.quartz-lightbox-caption {
+  margin-top: 0.8rem;
+  color: #f1f5f9;
+  font-size: 0.86rem;
+  line-height: 1.5;
+  text-align: center;
+  max-width: 82vw;
+  max-height: 10vh;
+  overflow-y: auto;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+}
+
+/* 底部操作提示 */
+.quartz-lightbox-hint {
+  margin-top: 0.4rem;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.55);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* 锁定背景正文滚动穿透 */
+body.quartz-lightbox-open {
+  overflow: hidden !important;
+}
+
