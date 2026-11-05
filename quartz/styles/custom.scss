@@ -1,20 +1,25 @@
 @use "./variables.scss" as *;
 
 // ==========================================================================
-// 1. 学术论文规范三线表 (Booktabs / Three-Line Table) - 紧凑精炼与响应式
+// 1. 学术论文规范三线表 (Booktabs / Three-Line Table) - 极致紧凑与吸顶保护
 // ==========================================================================
 
 .table-container {
   width: 100%;
   max-width: 100%;
-  overflow-x: auto;
+  /* 核心：限制超长表格的垂直最大高度，彻底杜绝单表占满整个屏幕 */
+  max-height: min(500px, 62vh);
+  overflow: auto; /* 同时支持水平与垂直自然滚动 */
   -webkit-overflow-scrolling: touch;
-  margin: 1.5rem auto 2rem auto;
+  margin: 1.2rem auto 1.8rem auto;
   display: block;
   box-sizing: border-box;
+  position: relative;
+  border-radius: 4px;
 
-  /* 学术级极简纤细滚动条 */
+  /* 学术级极简纤细滚动条（水平 + 垂直） */
   &::-webkit-scrollbar {
+    width: 5px;
     height: 5px;
   }
   &::-webkit-scrollbar-track {
@@ -34,43 +39,57 @@
     width: max-content;
     min-width: 100%;
     margin: 0 auto;
-    border-collapse: collapse;
+    border-collapse: separate; /* 配合 sticky thead 保持边框稳定 */
     border-spacing: 0;
 
     /* 顶线 \toprule: 2px 粗实线 */
     border-top: 2px solid var(--dark);
     /* 底线 \bottomrule: 2px 粗实线 */
     border-bottom: 2px solid var(--dark);
-    /* 彻底杜绝学术论文三线表中的竖线 */
+    /* 严格杜绝学术三线表的外竖线 */
     border-left: none !important;
     border-right: none !important;
 
-    /* 紧凑学术排版：从原本臃肿的 0.95rem 优化为 0.82rem，显著减小表格视觉体量 */
-    font-size: 0.82rem;
-    line-height: 1.42;
+    /* 极致紧凑排版：强制消除 base.scss 中 line-height: 2rem 的巨幅膨胀污染 */
+    font-size: 0.81rem;
     letter-spacing: 0.005em;
-    font-variant-numeric: tabular-nums; /* 等宽数字纵向精确对齐 */
+    font-variant-numeric: tabular-nums; /* 等宽数字纵向精准对齐 */
 
-    /* 表头 th */
+    &,
+    & > *,
+    thead,
+    tbody,
+    tr,
+    th,
+    td {
+      line-height: 1.25 !important; /* 关键：彻底压紧行间距 */
+    }
+
+    /* 表头 th：支持固定吸顶 (Sticky Header) */
     thead th,
     th {
       font-weight: 600;
       color: var(--dark);
+      /* 表头吸顶置顶，读者纵向滚动长表格时表头常驻可见，避免迷失列名 */
+      position: sticky;
+      top: 0;
+      z-index: 3;
+      background-color: var(--light); /* 吸顶不透明遮挡下方数据行 */
       /* 表头底线 \midrule: 1.1px 实线 */
       border-bottom: 1.1px solid var(--dark) !important;
       border-top: none !important;
       border-left: none !important;
       border-right: none !important;
-      padding: 0.45rem 0.65rem; /* 大幅精简内边距，克制紧凑 */
-      background-color: transparent;
+      padding: 0.35rem 0.55rem !important; /* 精简上下内边距 */
       text-align: center;
       white-space: nowrap;
+      box-shadow: 0 1px 0 var(--dark); /* 滚动时强化表头底线 */
     }
 
-    /* 表身 td */
+    /* 表身 td：紧凑行距 */
     tbody td,
     td {
-      padding: 0.38rem 0.65rem; /* 紧凑舒适，横向多列不撑爆屏幕 */
+      padding: 0.22rem 0.55rem !important; /* 垂直内边距降到 0.22rem，30行大表高度降低60% */
       border: none !important;
       text-align: center;
       color: var(--darkgray);
@@ -78,36 +97,85 @@
       white-space: nowrap;
     }
 
-    /* 表身 tr 行间微调：无横线，悬浮微高亮方便扫读 */
+    /* 表身 tr 行间微调：无横线，悬浮微高亮方便跨多列扫读 */
     tbody tr,
     tr {
       border: none !important;
-      transition: background-color 0.15s ease;
+      transition: background-color 0.12s ease;
 
       &:hover {
         background-color: var(--highlight);
       }
     }
 
-    /* 第一列（通常为指标名称/对比项目）：靠左对齐，适度留白 */
+    /* 第一列（项目/指标名称）：靠左对齐，适度留白，支持 sticky 或自适应 */
     th:first-child,
     td:first-child {
       text-align: left;
-      padding-left: 0.5rem;
-      white-space: normal; /* 允许名称适当折行，防止撑死列宽 */
+      padding-left: 0.45rem !important;
+      white-space: normal;
       max-width: 220px;
     }
 
     /* 最后一列调整右边距 */
     th:last-child,
     td:last-child {
-      padding-right: 0.5rem;
+      padding-right: 0.45rem !important;
     }
   }
 }
 
 // ==========================================================================
-// 2. 正文插图智能自适应呈现 (Responsive Figure & Academic Display)
+// 2. 正文列表 (ul / ol / li) 紧凑排版 - 消除松散与冗余垂直间距
+// ==========================================================================
+
+article {
+  /* 列表项上下间隙与行高紧凑化 */
+  ul,
+  ol {
+    padding-left: 1.35rem;
+    margin-top: 0.35rem;
+    margin-bottom: 0.75rem;
+
+    li {
+      margin-top: 0.15rem;
+      margin-bottom: 0.15rem;
+      line-height: 1.48;
+
+      /* 消除 li 内部嵌套 p 标签产生的冗余外边距 */
+      & > p {
+        margin-top: 0.1rem;
+        margin-bottom: 0.1rem;
+        line-height: 1.48;
+      }
+
+      /* 嵌套子列表 */
+      ul,
+      ol {
+        margin-top: 0.15rem;
+        margin-bottom: 0.25rem;
+      }
+    }
+  }
+
+  /* 目录 (TOC) 专属极致紧凑 */
+  h2#目录 + ul,
+  h2#目录 ~ ul:has(a[href^="#"]) {
+    margin-top: 0.4rem;
+    margin-bottom: 1.2rem;
+    line-height: 1.38;
+
+    li {
+      margin-top: 0.1rem;
+      margin-bottom: 0.1rem;
+      line-height: 1.38;
+      font-size: 0.92rem;
+    }
+  }
+}
+
+// ==========================================================================
+// 3. 正文插图智能自适应呈现 (Responsive Figure & Academic Display)
 // ==========================================================================
 
 article {
@@ -169,14 +237,17 @@ article {
     img {
       max-height: 360px;
     }
-    .table-container > table {
-      font-size: 0.78rem;
+    .table-container {
+      max-height: 400px;
+      & > table {
+        font-size: 0.76rem;
+      }
     }
   }
 }
 
 // ==========================================================================
-// 3. 沉浸式图片放大灯箱 (Academic Lightbox Overlay)
+// 4. 沉浸式图片放大灯箱 (Academic Lightbox Overlay)
 // ==========================================================================
 
 .quartz-lightbox-overlay {
